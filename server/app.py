@@ -72,14 +72,14 @@ class Signup(Resource):
 
         login_user(user)
 
-        return auth_tutor_schema.dump(user), 201
+        return tutor_schema.dump(user), 201
 
 
 class CheckSession(Resource):
     def get(self):
         if not current_user.is_authenticated:
             return {"error": "Not Authorized"}, 401
-        return auth_tutor_schema.dump(current_user), 200
+        return tutor_schema.dump(current_user), 200
 
 
 class Logout(Resource):
