@@ -62,66 +62,62 @@ def run_seed():
         db.session.commit()
 
         # ---- Tutor services (tutor <-> topic) ----
-        services = [
-            TutorService(
-                tutor_id=tutor_anna.id,
-                topic_id=topics[0].id,
-                rate=40,
-                description="Beginner friendly",
-            ),
-            TutorService(
-                tutor_id=tutor_anna.id,
-                topic_id=topics[1].id,
-                rate=55,
-                description="React help",
-            ),
-            TutorService(
-                tutor_id=tutor_mike.id,
-                topic_id=topics[2].id,
-                rate=35,
-                description="Python basics",
-            ),
-            TutorService(
-                tutor_id=tutor_mike.id,
-                topic_id=topics[3].id,
-                rate=60,
-                description="Flask backend",
-            ),
-        ]
+        anna_js = TutorService(
+            tutor_id=tutor_anna.id,
+            topic_id=topics[0].id,
+            rate=40,
+            description="Beginner friendly",
+        )
+        anna_react = TutorService(
+            tutor_id=tutor_anna.id,
+            topic_id=topics[1].id,
+            rate=55,
+            description="React help",
+        )
+        mike_python = TutorService(
+            tutor_id=tutor_mike.id,
+            topic_id=topics[2].id,
+            rate=35,
+            description="Python basics",
+        )
+        mike_flask = TutorService(
+            tutor_id=tutor_mike.id,
+            topic_id=topics[3].id,
+            rate=60,
+            description="Flask backend",
+        )
+
+        services = [anna_js, anna_react, mike_python, mike_flask]
         db.session.add_all(services)
         db.session.commit()
 
-        # ---- Requests (IMPORTANT: use student_id, tutor_id, topic_id) ----
+        # ---- Requests (IMPORTANT: use student_id + tutor_service_id) ----
         requests = [
-            # Requests for Mike's topics (Python / Flask)
+            # Requests for Mike's services (Python / Flask)
             Request(
                 status="pending",
                 description="Need help with variables and loops",
                 student_id=student_artem.id,
-                tutor_id=tutor_mike.id,
-                topic_id=topics[2].id,  # Python Basics
+                tutor_service_id=mike_python.id,
             ),
             Request(
                 status="accepted",
                 description="Help me build a simple Flask REST API",
                 student_id=student_john.id,
-                tutor_id=tutor_mike.id,
-                topic_id=topics[3].id,  # Flask APIs
+                tutor_service_id=mike_flask.id,
             ),
-            # Requests for Anna's topics (JS / React)
+            # Requests for Anna's services (JS / React)
             Request(
                 status="pending",
                 description="Explain closures and scope",
                 student_id=student_john.id,
-                tutor_id=tutor_anna.id,
-                topic_id=topics[0].id,  # JavaScript Basics
+                tutor_service_id=anna_js.id,
             ),
             Request(
                 status="completed",
                 description="State + props practice",
                 student_id=student_artem.id,
-                tutor_id=tutor_anna.id,
-                topic_id=topics[1].id,  # React Fundamentals
+                tutor_service_id=anna_react.id,
             ),
         ]
 
