@@ -5,10 +5,26 @@ from config import ma
 from models import User, Topic, TutorService, Request
 
 
-# -------------------------
-# Requests
-# -------------------------
+# ---------- Public Topic ----------
+class TopicWithTutorsSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Topic
+        load_instance = True
 
+    id = ma.auto_field()
+    topic = ma.auto_field()
+    description = ma.auto_field()
+
+
+topic_schema = TopicWithTutorsSchema()
+topics_schema = TopicWithTutorsSchema(many=True)
+
+
+
+
+# ---------- Logged-in Tutor ----------
+
+# ---------- Request ----------
 class RequestSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Request
@@ -26,11 +42,8 @@ request_schema = RequestSchema()
 requests_schema = RequestSchema(many=True)
 
 
-# -------------------------
-# Tutor Services
-# -------------------------
-
-class TutorServiceSchema(ma.SQLAlchemySchema):
+# ---------- TutorService (for tutor view) ----------
+class TutorServiceForTutorSchema(ma.SQLAlchemySchema):
     class Meta:
         model = TutorService
         load_instance = True
@@ -42,69 +55,28 @@ class TutorServiceSchema(ma.SQLAlchemySchema):
     tutor_id = ma.auto_field()
     topic_id = ma.auto_field()
 
-
-tutor_service_schema = TutorServiceSchema()
-tutor_services_schema = TutorServiceSchema(many=True)
-
-
-# TutorService + its requests
-class TutorServiceWithRequestsSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = TutorService
-        load_instance = True
-
-    id = ma.auto_field()
-    rate = ma.auto_field()
-    description = ma.auto_field()
-    tutor_id = ma.auto_field()
-    topic_id = ma.auto_field()
-
+    # include requests for THIS service (each has student_id)
     requests = fields.Nested(RequestSchema, many=True)
 
 
-tutor_service_with_requests_schema = TutorServiceWithRequestsSchema()
-tutor_services_with_requests_schema = TutorServiceWithRequestsSchema(many=True)
+tutor_service_for_tutor_schema = TutorServiceForTutorSchema()
+tutor_services_for_tutor_schema = TutorServiceForTutorSchema(many=True)
 
 
-# -------------------------
-# Topics
-# -------------------------
+# ---------- Topic + its services (derived from tutor_services) ----------
+class TopicWithServicesSchema(ma.Schema):
+    id = fields.Integer()
+    topic = fields.String()
+    description = fields.String(allow_none=True)
 
-class TopicSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = Topic
-        load_instance = True
-
-    id = ma.auto_field()
-    topic = ma.auto_field()
-    description = ma.auto_field()
-
-
-topic_schema = TopicSchema()
-topics_schema = TopicSchema(many=True)
-
-
-# Topic + tutor services (+ requests under each service)
-class TopicWithServicesSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = Topic
-        load_instance = True
-
-    id = ma.auto_field()
-    topic = ma.auto_field()
-    description = ma.auto_field()
-
-    tutor_services = fields.Nested(TutorServiceWithRequestsSchema, many=True)
+    tutor_services = fields.List(fields.Nested(TutorServiceForTutorSchema))
 
 
 topic_with_services_schema = TopicWithServicesSchema()
 topics_with_services_schema = TopicWithServicesSchema(many=True)
 
 
-# -------------------------
-# Users
-# -------------------------
-
+# ---------- Tutor (what you dump in app.py) ----------
 class TutorSchema(ma.SQLAlchemySchema):
     class Meta:
         model = User
@@ -114,70 +86,28 @@ class TutorSchema(ma.SQLAlchemySchema):
     name = ma.auto_field()
     role = ma.auto_field()
 
-    # Tutor view: show tutor services, each includes requests; and topic info via nested topic
-    tutor_services = fields.Method("get_tutor_services")
+    # tutor -> topics -> tutor_services -> requests (student_id)
+    topics = fields.Method("get_topics")
 
-    def get_tutor_services(self, user_obj):
-        # user_obj.tutor_services already exists for tutors
-        return tutor_services_with_requests_schema.dump(user_obj.tutor_services)
+    def get_topics(self, user_obj):
+        # group tutor_services by topic
+        topic_map = {}
+
+        for ts in user_obj.tutor_services:
+            t = ts.topic
+            if t.id not in topic_map:
+                topic_map[t.id] = {
+                    "id": t.id,
+                    "topic": t.topic,
+                    "description": t.description,
+                    "tutor_services": [],
+                }
+            topic_map[t.id]["tutor_services"].append(ts)
+
+        # stable output order (by topic id)
+        result = [topic_map[k] for k in sorted(topic_map.keys())]
+        return topics_with_services_schema.dump(result)
 
 
 tutor_schema = TutorSchema()
 tutors_schema = TutorSchema(many=True)
-
-
-class StudentSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = User
-        load_instance = True
-
-    id = ma.auto_field()
-    name = ma.auto_field()
-    role = ma.auto_field()
-
-    # Student view: show student's requests (and optionally what they requested)
-    requests = fields.Nested(RequestSchema, many=True)
-
-
-student_schema = StudentSchema()
-students_schema = StudentSchema(many=True)
-
-
-# -------------------------
-# Optional "rich" request output
-# -------------------------
-# If you want Request JSON to include tutor + topic info without extra fetches on frontend,
-# use this schema instead of RequestSchema in the student/tutor outputs.
-
-# class RequestDetailSchema(ma.SQLAlchemySchema):
-#     class Meta:
-#         model = Request
-#         load_instance = True
-
-#     id = ma.auto_field()
-#     status = ma.auto_field()
-#     description = ma.auto_field()
-
-#     student_id = ma.auto_field()
-#     tutor_service_id = ma.auto_field()
-
-#     tutor_id = fields.Method("get_tutor_id")
-#     topic_id = fields.Method("get_topic_id")
-#     topic = fields.Method("get_topic_title")
-#     tutor_name = fields.Method("get_tutor_name")
-
-#     def get_tutor_id(self, r_obj):
-#         return r_obj.tutor_service.tutor_id
-
-#     def get_topic_id(self, r_obj):
-#         return r_obj.tutor_service.topic_id
-
-#     def get_topic_title(self, r_obj):
-#         return r_obj.tutor_service.topic.topic
-
-#     def get_tutor_name(self, r_obj):
-#         return r_obj.tutor_service.tutor.name
-
-
-# request_detail_schema = RequestDetailSchema()
-# requests_detail_schema = RequestDetailSchema(many=True)
