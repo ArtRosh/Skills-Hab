@@ -18,8 +18,16 @@ function NavBar() {
 
         {currentUser ? (
           <>
-            <NavLink className="nav-link" to="/topics">Topics</NavLink>
-            <NavLink className="nav-link" to="/requests">Requests</NavLink>
+            {currentUser.role === "tutor" ? (
+              <>
+                <NavLink className="nav-link" to="/topics">My Services</NavLink>
+              </>
+            ) : currentUser.role === "student" ? (
+              <>
+                <NavLink className="nav-link" to="/student">Find Tutors</NavLink>
+                <NavLink className="nav-link" to="/my-requests">My Requests</NavLink>
+              </>
+            ) : null}
           </>
         ) : null}
       </div>
