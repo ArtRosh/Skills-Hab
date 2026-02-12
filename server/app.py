@@ -10,8 +10,9 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 # Local imports
 from config import app, db, api, login_manager, bcrypt
-from schemas import tutor_schema
+from schemas import tutor_schema, topic_schema, student_schema
 from schemas import topics_schema
+from schemas import tutor_service_for_tutor_schema, request_schema
 # Add your model imports
 from models import User, Topic, TutorService, Request
 
@@ -41,7 +42,8 @@ class Login(Resource):
             return {"error": "Invalid credentials"}, 401
 
         login_user(user)
-        return tutor_schema.dump(user), 200
+        schema = tutor_schema if user.role == "tutor" else student_schema
+        return schema.dump(user), 200
     
 
 class Signup(Resource):
@@ -73,14 +75,16 @@ class Signup(Resource):
 
         login_user(user)
 
-        return tutor_schema.dump(user), 201
+        schema = tutor_schema if user.role == "tutor" else student_schema
+        return schema.dump(user), 201
 
 
 class CheckSession(Resource):
     def get(self):
         if not current_user.is_authenticated:
             return {"error": "Not Authorized"}, 401
-        return tutor_schema.dump(current_user), 200
+        schema = tutor_schema if current_user.role == "tutor" else student_schema
+        return schema.dump(current_user), 200
 
 
 class Logout(Resource):
@@ -93,6 +97,160 @@ class Topics(Resource):
     def get(self):
         topics = Topic.query.all()
         return topics_schema.dump(topics), 200
+    
+    def post(self):
+        if not current_user.is_authenticated:
+            return {"error": "Not logged in"}, 401
+        
+        data = request.get_json() or {}
+        topic_name = data.get("topic")
+        description = data.get("description", "")
+        
+        if not topic_name:
+            return {"error": "topic is required"}, 400
+        
+        new_topic = Topic(topic=topic_name, description=description)
+        db.session.add(new_topic)
+        
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error creating topic: {str(e)}")
+            return {"error": f"could not create topic: {str(e)}"}, 500
+        
+        return topic_schema.dump(new_topic), 201
+
+
+class TutorServiceResource(Resource):
+    def post(self):
+        if not current_user.is_authenticated:
+            return {"error": "Not logged in"}, 401
+        
+        data = request.get_json() or {}
+        topic_id = data.get("topic_id")
+        rate = data.get("rate")
+        description = data.get("description", "")
+        
+        if not topic_id or not rate:
+            return {"error": "topic_id and rate are required"}, 400
+        
+        # Check if topic exists
+        topic = Topic.query.get(topic_id)
+        if not topic:
+            return {"error": "Topic not found"}, 404
+        
+        new_service = TutorService(
+            tutor_id=current_user.id,
+            topic_id=topic_id,
+            rate=rate,
+            description=description
+        )
+        db.session.add(new_service)
+        
+        try:
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            return {"error": "could not create service"}, 500
+        
+        return tutor_service_for_tutor_schema.dump(new_service), 201
+    
+    def patch(self, id):
+        if not current_user.is_authenticated:
+            return {"error": "Not logged in"}, 401
+        
+        service = TutorService.query.get(id)
+        if not service:
+            return {"error": "Service not found"}, 404
+        
+        if service.tutor_id != current_user.id:
+            return {"error": "Unauthorized"}, 403
+        
+        data = request.get_json()
+        service.rate = data.get("rate", service.rate)
+        service.description = data.get("description", service.description)
+        service.topic_id = data.get("topic_id", service.topic_id)
+        
+        db.session.commit()
+        return tutor_service_for_tutor_schema.dump(service), 200
+
+    def delete(self, id):
+        if not current_user.is_authenticated:
+            return {"error": "Not logged in"}, 401
+        
+        service = TutorService.query.get(id)
+        if not service:
+            return {"error": "Service not found"}, 404
+        
+        db.session.delete(service)
+        db.session.commit()
+        return {}, 204
+
+
+
+class TutorServiceDelete(Resource):
+    def delete(self, id):
+        if not current_user.is_authenticated:
+            return {"error": "Not logged in"}, 401
+        
+        service = TutorService.query.get(id)
+        if not service:
+            return {"error": "Service not found"}, 404
+        
+        db.session.delete(service)
+        db.session.commit()
+        return {}, 204
+
+
+class RequestResource(Resource):
+    def post(self):
+        if not current_user.is_authenticated:
+            return {"error": "Not logged in"}, 401
+        
+        data = request.get_json() or {}
+        tutor_service_id = data.get("tutor_service_id")
+        description = data.get("description", "")
+        
+        if not tutor_service_id:
+            return {"error": "tutor_service_id is required"}, 400
+        
+        # Check if tutor service exists
+        tutor_service = TutorService.query.get(tutor_service_id)
+        if not tutor_service:
+            return {"error": "Tutor service not found"}, 404
+        
+        new_request = Request(
+            student_id=current_user.id,
+            tutor_service_id=tutor_service_id,
+            description=description,
+            status="pending"
+        )
+        db.session.add(new_request)
+        
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return {"error": f"could not create request: {str(e)}"}, 500
+        
+        return request_schema.dump(new_request), 201
+
+
+class RequestUpdate(Resource):
+    def post(self, id):
+        if not current_user.is_authenticated:
+            return {"error": "Not logged in"}, 401
+        
+        req = Request.query.get(id)
+        if not req:
+            return {"error": "Request not found"}, 404
+        
+        data = request.get_json()
+        req.status = data.get("status", req.status)
+        
+        db.session.commit()
+        return request_schema.dump(req), 200
 
 
 # class TopicById(Resource):
@@ -110,6 +268,9 @@ api.add_resource(Signup, "/signup")
 api.add_resource(CheckSession, "/check_session")
 api.add_resource(Logout, "/logout")
 api.add_resource(Topics, "/topics")
+api.add_resource(TutorServiceResource, "/tutor_services", "/tutor_services/<int:id>")
+api.add_resource(RequestResource, "/requests")
+api.add_resource(RequestUpdate, "/requests/<int:id>")
 # api.add_resource(TopicById, "/topics/<int:id>")
 
 
