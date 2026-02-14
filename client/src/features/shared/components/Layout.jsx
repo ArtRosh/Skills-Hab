@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar";
-import { DataProvider } from "../context/DataContext";
+import { DataProvider } from "../../../context/DataContext";
 
 function Layout() {
   return (

@@ -5,7 +5,8 @@ from config import ma
 from models import User, Topic, TutorService, Request
 
 
-# ---------- Public Topic ----------
+
+# ---------- PUBLIC TOPICS ----------
 class TopicWithTutorsSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Topic
@@ -22,7 +23,18 @@ topics_schema = TopicWithTutorsSchema(many=True)
 
 
 
-# ---------- Logged-in Tutor ----------
+# ---------- LOGGED-IN TUTOR ----------
+
+# ---------- Student Info (for nested in requests) ----------
+class StudentInfoSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = User
+        load_instance = True
+
+    id = ma.auto_field()
+    name = ma.auto_field()
+    role = ma.auto_field()
+
 
 # ---------- Request ----------
 class RequestSchema(ma.SQLAlchemySchema):
@@ -36,13 +48,14 @@ class RequestSchema(ma.SQLAlchemySchema):
 
     student_id = ma.auto_field()
     tutor_service_id = ma.auto_field()
-
+    
+    student = fields.Nested(StudentInfoSchema)
 
 request_schema = RequestSchema()
 requests_schema = RequestSchema(many=True)
 
 
-# ---------- TutorService (for tutor view) ----------
+# ---------- TutorService ----------
 class TutorServiceForTutorSchema(ma.SQLAlchemySchema):
     class Meta:
         model = TutorService
@@ -55,22 +68,19 @@ class TutorServiceForTutorSchema(ma.SQLAlchemySchema):
     tutor_id = ma.auto_field()
     topic_id = ma.auto_field()
 
-    # include requests for THIS service (each has student_id)
     requests = fields.Nested(RequestSchema, many=True)
-
 
 tutor_service_for_tutor_schema = TutorServiceForTutorSchema()
 tutor_services_for_tutor_schema = TutorServiceForTutorSchema(many=True)
 
 
-# ---------- Topic + its services (derived from tutor_services) ----------
+# ---------- Topic + its services ----------
 class TopicWithServicesSchema(ma.Schema):
     id = fields.Integer()
     topic = fields.String()
     description = fields.String(allow_none=True)
 
     tutor_services = fields.List(fields.Nested(TutorServiceForTutorSchema))
-
 
 topic_with_services_schema = TopicWithServicesSchema()
 topics_with_services_schema = TopicWithServicesSchema(many=True)
@@ -108,12 +118,15 @@ class TutorSchema(ma.SQLAlchemySchema):
         result = [topic_map[k] for k in sorted(topic_map.keys())]
         return topics_with_services_schema.dump(result)
 
-
 tutor_schema = TutorSchema()
 tutors_schema = TutorSchema(many=True)
 
 
-# ---------- Request with nested TutorService and Topic (for student view) ----------
+
+
+# ---------- LOGGED-IN STUDENT ----------
+
+# ---------- Request with nested TutorService and Topic ----------
 class TutorServiceForStudentSchema(ma.SQLAlchemySchema):
     class Meta:
         model = TutorService
@@ -193,6 +206,8 @@ class StudentSchema(ma.SQLAlchemySchema):
                     "id": ts.id,
                     "rate": ts.rate,
                     "description": ts.description,
+                    "tutor_id": ts.tutor_id,
+                    "topic_id": ts.topic_id,
                     "tutor": {"id": ts.tutor.id, "name": ts.tutor.name},
                     "requests": [],
                 }

@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import DataContext from "../context/DataContext";
+import DataContext from "../../../context/DataContext";
 
 const schema = yup.object({
   name: yup.string().required("Name is required"),
