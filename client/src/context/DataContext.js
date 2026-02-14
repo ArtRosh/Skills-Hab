@@ -6,16 +6,36 @@ const DataContext = createContext();
 export function DataProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+  
 
+  // Public data for Home
+  const [topics, setTopics] = useState([]);
+  const [topicsLoading, setTopicsLoading] = useState(true);
+
+  // Auth check (session)
   useEffect(() => {
     fetch("/check_session", { credentials: "include" })
       .then((r) => {
         if (!r.ok) throw new Error("Not Authorized");
         return r.json();
       })
-      .then((user) => setCurrentUser(user))
+      .then((user) => {
+        setCurrentUser(user)
+      })
       .catch(() => setCurrentUser(null))
       .finally(() => setAuthLoading(false));
+  }, []);
+
+  // Public topics (Home)
+  useEffect(() => {
+    fetch("/topics", { credentials: "include" }) 
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to load topics");
+        return r.json();
+      })
+      .then((data) => setTopics(data))
+      .catch(() => setTopics([]))
+      .finally(() => setTopicsLoading(false));
   }, []);
 
   function login(payload) {
@@ -68,6 +88,12 @@ export function DataProvider({ children }) {
         currentUser,
         setCurrentUser,
         authLoading,
+
+        // public topics for Home
+        topics,
+        setTopics,
+        topicsLoading,
+
         login,
         logout,
         signup,

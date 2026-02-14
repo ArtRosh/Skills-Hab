@@ -1,7 +1,7 @@
 // client/src/components/NavBar.jsx
 import { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import DataContext from "../context/DataContext";
+import DataContext from "../../../context/DataContext";
 
 function NavBar() {
   const { currentUser, logout } = useContext(DataContext);
@@ -14,18 +14,17 @@ function NavBar() {
   return (
     <nav className="navbar navbar-expand navbar-light bg-light rounded px-3 mb-4">
       <div className="navbar-nav me-auto">
-        <NavLink className="nav-link" to="/">Home</NavLink>
+        <NavLink className="nav-link" to="/">Topics</NavLink>
 
         {currentUser ? (
           <>
             {currentUser.role === "tutor" ? (
               <>
-                <NavLink className="nav-link" to="/topics">My Services</NavLink>
+                <NavLink className="nav-link" to="/tutor_topics">My Topics</NavLink>
               </>
             ) : currentUser.role === "student" ? (
               <>
-                <NavLink className="nav-link" to="/student">Find Tutors</NavLink>
-                <NavLink className="nav-link" to="/my-requests">My Requests</NavLink>
+                <NavLink className="nav-link" to="/student_topics">My Topics</NavLink>
               </>
             ) : null}
           </>
