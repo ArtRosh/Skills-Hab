@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function TopicServices({ topic }) {
@@ -37,7 +36,7 @@ function TopicServices({ topic }) {
                       <div className="ms-2">
                         <button
                           className="btn btn-primary btn-sm"
-                          onClick={() => navigate(`/student/service/${service.id}/requests`)}
+                          onClick={() => navigate(`/student/topic/${topic.id}/service/${service.id}/requests`)}
                         >
                           View Requests ({service.requests.length})
                         </button>
