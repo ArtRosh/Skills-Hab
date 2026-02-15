@@ -7,10 +7,10 @@ import Login from "./features/auth/pages/Login";
 import Signup from "./features/auth/pages/Signup";
 import RequireAuth from "./features/shared/components/RequireAuth";
 
-import Topics from "./features/tutor/pages/TutorTopics";
-import TutorServiceRequests from "./features/tutor/pages/ServiceRequests";
+import TutorTopics from "./features/tutor/pages/TutorTopics";
+import TutorServiceRequests from "./features/tutor/pages/TutorServiceRequests";
 import StudentTopics from "./features/student/pages/StudentTopics";
-import StudentServiceRequests from "./features/student/pages/ServiceRequests";
+import StudentServiceRequests from "./features/student/pages/StudentServiceRequests";
 
 
 const routes = [
@@ -26,9 +26,9 @@ const routes = [
       { path: "signup", element: <Signup /> },
 
       // protected
-      { path: "tutor_topics", element: <RequireAuth><Topics /></RequireAuth> },
+      { path: "tutor_topics", element: <RequireAuth><TutorTopics /></RequireAuth> },
       { path: "student_topics", element: <RequireAuth><StudentTopics /></RequireAuth> },
-      { path: "student/service/:serviceId/requests", element: <RequireAuth><StudentServiceRequests /></RequireAuth> },
+      { path: "student/topic/:topicId/service/:serviceId/requests", element: <RequireAuth><StudentServiceRequests /></RequireAuth> },
       { path: "tutor/topic/:topicId/service/:serviceId/requests", element: <RequireAuth><TutorServiceRequests /></RequireAuth> },
       
     ],
