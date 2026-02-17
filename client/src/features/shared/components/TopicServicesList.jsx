@@ -9,14 +9,15 @@ function TopicServicesList({ topic }) {
   const services = topic.tutor_services || [];
 
   const isStudent = currentUser?.role === "student";
+  const isTutor = currentUser?.role === "tutor";
 
   return (
     <div className="card">
       <div className="card-body">
         <h5 className="card-title mb-2">{topic.topic}</h5>
-        <p className="card-text text-muted mb-4">{topic.description}</p>
+        <p className="card-text text-muted mb-0">{topic.description}</p>
 
-        {services.length === 0 ? (
+        {isTutor ? null : services.length === 0 ? (
           <p className="text-muted small">No tutors available for this topic yet.</p>
         ) : (
           <div className="d-grid gap-2">
@@ -57,12 +58,14 @@ function TopicServicesList({ topic }) {
         )}
       </div>
 
-      <RequestServiceModal
+      {!isTutor && (
+        <RequestServiceModal
         isOpen={!!requestingService}
         onClose={() => setRequestingService(null)}
         service={requestingService}
         topicName={topic.topic}
       />
+      )}
     </div>
   );
 }
