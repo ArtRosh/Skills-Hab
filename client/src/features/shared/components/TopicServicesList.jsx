@@ -14,9 +14,11 @@ function TopicServicesList({ topic }) {
   return (
     <div className="card">
       <div className="card-body">
+        {/* Topic Header */}
         <h5 className="card-title mb-2">{topic.topic}</h5>
-        <p className="card-text text-muted mb-0">{topic.description}</p>
+        <p className="card-text text-muted mb-4">{topic.description}</p>
 
+        {/* Services */}
         {isTutor ? null : services.length === 0 ? (
           <p className="text-muted small">No tutors available for this topic yet.</p>
         ) : (
@@ -35,7 +37,7 @@ function TopicServicesList({ topic }) {
                       <strong>Service:</strong> {service.description || "No description"}
                     </p>
                   </div>
-                  <div className="ms-2">
+                  <div className="ms-2 d-flex gap-2">
                     {isStudent ? (
                       <button
                         className="btn btn-primary btn-sm"
@@ -43,9 +45,7 @@ function TopicServicesList({ topic }) {
                       >
                         Request
                       </button>
-                    ) : currentUser ? (
-                      <span className="text-muted small fst-italic">Tutor View</span>
-                    ) : (
+                    ) : currentUser ? null : (
                       <Link to="/login" className="btn btn-outline-primary btn-sm">
                         Login to Request
                       </Link>
