@@ -3,7 +3,7 @@
 # Remote library imports
 from flask import request
 from flask_restful import Resource
-from flask_login import login_user, logout_user, current_user, login_required   
+from flask_login import login_user, logout_user, current_user   
 
 
 # Local imports
