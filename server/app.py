@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-# Standard library imports
-
 # Remote library imports
 from flask import request
 from flask_restful import Resource
@@ -253,14 +251,6 @@ class RequestUpdate(Resource):
         return request_schema.dump(req), 200
 
 
-# class TopicById(Resource):
-#     def get(self, id):
-#         topic = Topic.query.get(id)
-#         if not topic:
-#             return {"error": "Not Found"}, 404
-#         return topic_schema.dump(topic), 200
-
-
 
 
 api.add_resource(Login, "/login")
@@ -271,7 +261,6 @@ api.add_resource(Topics, "/topics")
 api.add_resource(TutorServiceResource, "/tutor_services", "/tutor_services/<int:id>")
 api.add_resource(RequestResource, "/requests")
 api.add_resource(RequestUpdate, "/requests/<int:id>")
-# api.add_resource(TopicById, "/topics/<int:id>")
 
 
 if __name__ == '__main__':
