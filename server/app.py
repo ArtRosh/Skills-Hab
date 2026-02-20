@@ -236,19 +236,36 @@ class RequestResource(Resource):
 
 
 class RequestUpdate(Resource):
-    def post(self, id):
+    ALLOWED_STATUSES = {"pending", "accepted", "rejected"}
+
+    def patch(self, id):
         if not current_user.is_authenticated:
             return {"error": "Not logged in"}, 401
-        
+
         req = Request.query.get(id)
         if not req:
             return {"error": "Request not found"}, 404
-        
-        data = request.get_json()
-        req.status = data.get("status", req.status)
-        
+
+        # Only the tutor who owns the tutor_service can change status
+        if current_user.role != "tutor" or req.tutor_service.tutor_id != current_user.id:
+            return {"error": "Unauthorized"}, 403
+
+        data = request.get_json() or {}
+        new_status = data.get("status")
+
+        if new_status is None:
+            return {"error": "status is required"}, 400
+
+        if new_status not in self.ALLOWED_STATUSES:
+            return {"error": f"status must be one of: {', '.join(sorted(self.ALLOWED_STATUSES))}"}, 400
+
+        req.status = new_status
         db.session.commit()
         return request_schema.dump(req), 200
+
+    # Backward-compatible: allow POST to behave like PATCH
+    def post(self, id):
+        return self.patch(id)
 
 
 
