@@ -1,11 +1,10 @@
-import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import DataContext from "../../../context/DataContext";
-import RequestServiceModal from "./RequestServiceModal";
 
 function TopicServicesList({ topic }) {
   const { currentUser } = useContext(DataContext);
-  const [requestingService, setRequestingService] = useState(null);
+  const navigate = useNavigate();
   const services = topic.tutor_services || [];
 
   const isStudent = currentUser?.role === "student";
@@ -41,7 +40,7 @@ function TopicServicesList({ topic }) {
                     {isStudent ? (
                       <button
                         className="btn btn-primary btn-sm"
-                        onClick={() => setRequestingService(service)}
+                        onClick={() => navigate(`/topic/${topic.id}/service/${service.id}/request`)}
                       >
                         Request
                       </button>
@@ -57,15 +56,6 @@ function TopicServicesList({ topic }) {
           </div>
         )}
       </div>
-
-      {!isTutor && (
-        <RequestServiceModal
-        isOpen={!!requestingService}
-        onClose={() => setRequestingService(null)}
-        service={requestingService}
-        topicName={topic.topic}
-      />
-      )}
     </div>
   );
 }
