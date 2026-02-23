@@ -57,9 +57,9 @@ Defined in [client/src/router.js](client/src/router.js).
 ### Protected
 - `/tutor_topics` — tutor services dashboard
 - `/student_topics` — student requested topics/services
-- `/student/topic/:topicId/service/:serviceId/request` — create a request
 - `/student/topic/:topicId/service/:serviceId/requests` — student request history for one service
 - `/tutor/topic/:topicId/service/:serviceId/requests` — tutor request list for one service
+- `/topic/:topicId/service/:serviceId/request` — open the request modal for a specific service
 
 ## API Endpoints (Core)
 
@@ -91,33 +91,7 @@ Defined in [server/app.py](server/app.py).
 3. Open service requests page.
 4. Accept/reject requests.
 
-## Screenshots
 
-Store screenshots in:
-
-- `client/public/screenshots/`
-
-Suggested files:
-- `home.png`
-- `student-create-request.png`
-- `student-requests.png`
-- `tutor-topics.png`
-- `tutor-requests.png`
-
-### Home
-![Home](./client/public/screenshots/home.png)
-
-### Student Create Request
-![Student Create Request](./client/public/screenshots/student-create-request.png)
-
-### Student Requests
-![Student Requests](./client/public/screenshots/student-requests.png)
-
-### Tutor Topics
-![Tutor Topics](./client/public/screenshots/tutor-topics.png)
-
-### Tutor Requests
-![Tutor Requests](./client/public/screenshots/tutor-requests.png)
 
 ## Project Structure
 
