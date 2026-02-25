@@ -1,4 +1,3 @@
-// client/src/pages/Home.jsx
 import { useContext } from "react";
 import DataContext from "../../../context/DataContext";
 import TopicServicesList from "../components/TopicServicesList";

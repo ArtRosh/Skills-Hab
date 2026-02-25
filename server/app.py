@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Remote library imports
 from flask import request
 from flask_restful import Resource

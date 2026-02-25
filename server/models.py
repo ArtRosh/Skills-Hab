@@ -1,5 +1,3 @@
-# server/models.py
-
 from flask_login import UserMixin
 from config import db
 

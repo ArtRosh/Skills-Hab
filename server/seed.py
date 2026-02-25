@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from faker import Faker
 from config import app, db, bcrypt
 from models import User, Topic, TutorService, Request

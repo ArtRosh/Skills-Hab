@@ -1,4 +1,3 @@
-// client/src/pages/TutorTopics.jsx
 import { useContext, useState } from "react";
 import DataContext from "../../../context/DataContext";
 import TopicServices from "../components/TopicServices";

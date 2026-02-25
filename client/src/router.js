@@ -1,5 +1,3 @@
-// client/src/router.js
-
 import Layout from "./features/shared/components/Layout";
 import Home from "./features/shared/pages/Home";
 import ErrorPage from "./features/shared/pages/ErrorPage";
