@@ -1,4 +1,3 @@
-// client/src/context/DataContext.js
 import { createContext, useEffect, useState } from "react";
 
 const DataContext = createContext();

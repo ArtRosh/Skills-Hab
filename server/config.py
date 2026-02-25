@@ -1,5 +1,3 @@
-# Standard library imports
-
 # Remote library imports
 import  os
 from flask import Flask
@@ -12,7 +10,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_marshmallow import Marshmallow
 
-# Local imports
+
 
 # Instantiate app, set attributes
 app = Flask(__name__)

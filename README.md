@@ -61,7 +61,7 @@ Defined in [client/src/router.js](client/src/router.js).
 - `/tutor/topic/:topicId/service/:serviceId/requests` — tutor request list for one service
 - `/topic/:topicId/service/:serviceId/request` — open the request modal for a specific service
 
-## API Endpoints (Core)
+## API Endpoints 
 
 Defined in [server/app.py](server/app.py).
 

@@ -1,4 +1,3 @@
-// client/src/components/RequireAuth.jsx
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import DataContext from "../../../context/DataContext";
