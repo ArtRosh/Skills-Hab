@@ -88,11 +88,12 @@ export function DataProvider({ children }) {
         setCurrentUser,
         authLoading,
 
-        // public topics for Home
+        
         topics,
         setTopics,
         topicsLoading,
 
+        
         login,
         logout,
         signup,
