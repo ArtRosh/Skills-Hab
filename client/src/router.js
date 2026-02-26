@@ -10,6 +10,7 @@ import StudentTopics from "./features/student/pages/StudentTopics";
 import StudentServiceRequests from "./features/student/pages/StudentServiceRequests";
 import RequestServiceModal from "./features/shared/pages/RequestServiceModal";
 import RequireStudent from "./features/shared/components/RequireStudent";
+import NotAuthorized from "./features/shared/pages/NotAuthorized";
 
 
 const routes = [
@@ -30,6 +31,7 @@ const routes = [
       { path: "student/topic/:topicId/service/:serviceId/requests", element: <RequireAuth><StudentServiceRequests /></RequireAuth> },
       { path: "tutor/topic/:topicId/service/:serviceId/requests", element: <RequireAuth><TutorServiceRequests /></RequireAuth> },
       { path: "topic/:topicId/service/:serviceId/request", element: <RequireAuth><RequireStudent><RequestServiceModal /></RequireStudent></RequireAuth> },
+      { path: "not-authorized", element: <NotAuthorized /> },
     ],
   },
 ];
