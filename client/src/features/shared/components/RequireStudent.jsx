@@ -10,7 +10,7 @@ function RequireStudent({ children }) {
 
   if (!currentUser || currentUser.role !== "student") {
     // Redirect to home or a Not Authorized page
-    return <Navigate to="/" state={{ from: location }} replace />;
+    return <Navigate to="/not-authorized" state={{ from: location }} replace />;
   }
 
   return children;
