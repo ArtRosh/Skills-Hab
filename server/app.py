@@ -16,7 +16,7 @@ from models import User, Topic, TutorService, Request
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 @app.route('/')
 def index():
@@ -132,7 +132,7 @@ class TutorServiceResource(Resource):
             return {"error": "topic_id and rate are required"}, 400
         
         # Check if topic exists
-        topic = Topic.query.get(topic_id)
+        topic = db.session.get(Topic, topic_id)
         if not topic:
             return {"error": "Topic not found"}, 404
         
@@ -156,7 +156,7 @@ class TutorServiceResource(Resource):
         if not current_user.is_authenticated:
             return {"error": "Not logged in"}, 401
         
-        service = TutorService.query.get(id)
+        service = db.session.get(TutorService, id)
         if not service:
             return {"error": "Service not found"}, 404
         
@@ -175,7 +175,7 @@ class TutorServiceResource(Resource):
         if not current_user.is_authenticated:
             return {"error": "Not logged in"}, 401
         
-        service = TutorService.query.get(id)
+        service = db.session.get(TutorService, id)
         if not service:
             return {"error": "Service not found"}, 404
         
@@ -190,7 +190,7 @@ class TutorServiceDelete(Resource):
         if not current_user.is_authenticated:
             return {"error": "Not logged in"}, 401
         
-        service = TutorService.query.get(id)
+        service = db.session.get(TutorService, id)
         if not service:
             return {"error": "Service not found"}, 404
         
@@ -212,7 +212,7 @@ class RequestResource(Resource):
             return {"error": "tutor_service_id is required"}, 400
         
         # Check if tutor service exists
-        tutor_service = TutorService.query.get(tutor_service_id)
+        tutor_service = db.session.get(TutorService, tutor_service_id)
         if not tutor_service:
             return {"error": "Tutor service not found"}, 404
         
@@ -240,7 +240,7 @@ class RequestUpdate(Resource):
         if not current_user.is_authenticated:
             return {"error": "Not logged in"}, 401
 
-        req = Request.query.get(id)
+        req = db.session.get(Request, id)
         if not req:
             return {"error": "Request not found"}, 404
 
