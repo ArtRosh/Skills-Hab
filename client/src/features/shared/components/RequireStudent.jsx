@@ -7,7 +7,7 @@ const RequireStudent = ({ children }) => {
 
   if (!currentUser || currentUser.role !== "student") {
 
-    // Redirect to Not Authorized page
+    // Redirect non-student users to the "not authorized" page
     return <Navigate to="/not-authorized" replace />;
   }
 
