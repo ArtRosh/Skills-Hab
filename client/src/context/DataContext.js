@@ -4,7 +4,6 @@ const DataContext = createContext();
 
 export function DataProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
   
 
   // Public data for Home
@@ -21,8 +20,7 @@ export function DataProvider({ children }) {
       .then((user) => {
         setCurrentUser(user)
       })
-      .catch(() => setCurrentUser(null))
-      .finally(() => setAuthLoading(false));
+      .catch(() => setCurrentUser(null));
   }, []);
 
   // Public topics (Home)
@@ -86,7 +84,6 @@ export function DataProvider({ children }) {
       value={{
         currentUser,
         setCurrentUser,
-        authLoading,
 
         
         topics,
