@@ -4,6 +4,8 @@ const DataContext = createContext();
 
 export function DataProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+
+  // Tracks whether authentication status is still being determined
   const [authLoading, setAuthLoading] = useState(true);
   
 
@@ -34,6 +36,7 @@ export function DataProvider({ children }) {
       })
       .then((data) => setTopics(data))
       .catch(() => setTopics([]))
+      // Set topicsLoading to false after topics fetch finishes
       .finally(() => setTopicsLoading(false));
   }, []);
 
