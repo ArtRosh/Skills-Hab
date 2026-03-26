@@ -24,7 +24,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
 # Instantiate secret key
-app.config['SECRET_KEY'] = os.environ["SECRET_KEY"]
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret')
 
 # Define metadata, instantiate db
 metadata = MetaData(naming_convention={
