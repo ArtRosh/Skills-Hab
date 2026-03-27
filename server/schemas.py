@@ -1,5 +1,5 @@
 from marshmallow import fields
-from config import ma
+from server.config import ma
 from models import User, Topic, TutorService, Request
 
 
