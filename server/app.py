@@ -5,12 +5,12 @@ from flask_login import login_user, logout_user, current_user
 
 
 # Local imports
-from config import app, db, api, login_manager, bcrypt
-from schemas import tutor_schema, topic_schema, student_schema
-from schemas import topics_schema
-from schemas import tutor_service_for_tutor_schema, request_schema
+from server.config import app, db, api, login_manager, bcrypt
+from server.schemas import tutor_schema, topic_schema, student_schema
+from server.schemas import topics_schema
+from server.schemas import tutor_service_for_tutor_schema, request_schema
 # Add your model imports
-from models import User, Topic, TutorService, Request
+from server.models import User, Topic, TutorService, Request
 
 # Views go here!
 
