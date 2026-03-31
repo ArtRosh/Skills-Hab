@@ -15,7 +15,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Instantiate app, set attributes
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/build',
+    template_folder='../client/build'
+)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL',
     'sqlite:///app.db'
