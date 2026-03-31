@@ -17,9 +17,6 @@ function RequestServiceModal() {
   const service = topic?.tutor_services?.find((s) => String(s.id) === serviceId);
 
 
-  
-
-
   const validationSchema = Yup.object().shape({
     description: Yup.string(),
   });
@@ -30,7 +27,7 @@ function RequestServiceModal() {
     onSubmit: (values) => {
       setError("");
       setIsLoading(true);
-      fetch("/requests", {
+      fetch("/api/requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
