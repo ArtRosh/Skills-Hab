@@ -31,7 +31,7 @@ function AddServiceModal({ isOpen, onClose, allTopics, currentUser, setCurrentUs
       setError("");
       setIsLoading(true);
 
-      fetch("/tutor_services", {
+      fetch("/api/tutor_services", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
