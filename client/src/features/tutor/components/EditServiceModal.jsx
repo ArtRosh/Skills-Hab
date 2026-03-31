@@ -11,7 +11,7 @@ function EditServiceModal({ isOpen, onClose, service, currentUser, setCurrentUse
       setError("");
       setIsLoading(true);
 
-      fetch(`/tutor_services/${service.id}`, {
+      fetch(`/api/tutor_services/${service.id}`, {
         method: "DELETE",
         credentials: "include",
       })
