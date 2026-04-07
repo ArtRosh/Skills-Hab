@@ -70,9 +70,9 @@ function RequestServiceModal() {
     },
   });
 
-  // if (!topic || !service) {
-  // return <div>Loading...</div>;
-  // }
+  if (!topic || !service) {
+  return <div>Loading...</div>;
+  }
 
   return (
     <div
