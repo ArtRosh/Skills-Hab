@@ -56,10 +56,10 @@ function RequestServiceModal() {
             topics: (() => {
               const userTopics = currentUser.topics || [];
 
-              // 1. Найти topic
+              // 1. Find the topic
               const existingTopic = userTopics.find(t => t.id === topic.id);
 
-              // ❗ ЕСЛИ topic НЕ существует → создаём полностью
+              // If the topic does not exist, create it from scratch
               if (!existingTopic) {
                 return [
                   ...userTopics,
@@ -82,7 +82,7 @@ function RequestServiceModal() {
                 ];
               }
 
-              // 2. Topic есть → проверяем service
+              // 2. The topic exists, so check the service
               const existingService = existingTopic.tutor_services?.find(
                 s => s.id === service.id
               );
@@ -90,7 +90,7 @@ function RequestServiceModal() {
               return userTopics.map(t => {
                 if (t.id !== topic.id) return t;
 
-                // ❗ ЕСЛИ service НЕ существует → добавляем
+                // If the service does not exist, add it
                 if (!existingService) {
                   return {
                     ...t,
@@ -109,7 +109,7 @@ function RequestServiceModal() {
                   };
                 }
 
-                // 3. Всё есть → просто добавляем request
+                // Everything exists, so just add the request
                 return {
                   ...t,
                   tutor_services: t.tutor_services.map(s => {
