@@ -1,0 +1,33 @@
+.site-title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  background-image: url("https://images.unsplash.com/photo-1519389950473-47ba0277781c");
+  background-size: cover;
+  background-position: center;
+}
+
+.site-title-container h1 {
+  font-size: 80px;
+  font-family: garamond;
+  text-align: center;
+}
+
+.handwriting {
+  animation: handwriting 0.5s forwards;
+  opacity: 0;
+}
+
+@keyframes handwriting {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.skills-description {
+  min-height: 100vh;
+  padding: 60px;
+  background: #111;
+  color: white;
+}
