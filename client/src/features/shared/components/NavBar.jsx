@@ -14,6 +14,7 @@ function NavBar() {
     <nav className="navbar navbar-expand navbar-light bg-light rounded px-3 mb-4">
       <div className="navbar-nav me-auto">
         <NavLink className="nav-link" to="/">Topics</NavLink>
+        <NavLink className="nav-link" to="/home">Home</NavLink>
 
         {currentUser ? (
           <>
