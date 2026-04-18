@@ -13,6 +13,7 @@ import RequestChat from "./features/shared/pages/RequestChat";
 import RequireStudent from "./features/shared/components/RequireStudent";
 import RequireTutor from "./features/shared/components/RequireTutor";
 import NotAuthorized from "./features/shared/pages/NotAuthorized";
+import SkillsHubLanding from "./features/shared/components/SkillsHubLanding";
 
 
 const routes = [
@@ -26,6 +27,7 @@ const routes = [
       // public
       { path: "login", element: <Login /> },
       { path: "signup", element: <Signup /> },
+      { path: "home", element: <SkillsHubLanding />},
 
       // protected
       { path: "tutor_topics", element: <RequireAuth><RequireTutor><TutorTopics /></RequireTutor></RequireAuth> },
