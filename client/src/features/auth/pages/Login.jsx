@@ -49,7 +49,7 @@ function Login() {
       <form onSubmit={formik.handleSubmit}>
         <div className="mb-3">
           <label className="form-label" htmlFor="name">
-            Name
+            UserName
           </label>
 
           <input
