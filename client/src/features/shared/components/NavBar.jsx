@@ -14,7 +14,7 @@ function NavBar() {
     <nav className="navbar navbar-expand navbar-light bg-light rounded px-3 mb-4">
       <div className="d-flex align-items-center w-100">
         <div className="d-flex align-items-center gap-3 flex-fill">
-          <NavLink className="nav-link" to="/">Topics</NavLink>
+          <NavLink className="nav-link" to="topics">Topics</NavLink>
 
           {currentUser ? (
             <>
@@ -32,7 +32,7 @@ function NavBar() {
         </div>
 
         <div className="d-flex justify-content-center flex-fill">
-          <NavLink className="nav-link fw-bold" to="/home">Skills-Hub</NavLink>
+          <NavLink className="nav-link fw-bold" to="">Skills-Hub</NavLink>
         </div>
 
         <div className="d-flex align-items-center justify-content-end gap-3 flex-fill">
