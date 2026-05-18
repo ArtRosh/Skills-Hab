@@ -22,12 +22,12 @@ const routes = [
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <Home /> },
+      { path: "", element: <SkillsHubLanding />},
 
       // public
       { path: "login", element: <Login /> },
       { path: "signup", element: <Signup /> },
-      { path: "home", element: <SkillsHubLanding />},
+      { path: "topics", element: <Home /> },
 
       // protected
       { path: "tutor_topics", element: <RequireAuth><RequireTutor><TutorTopics /></RequireTutor></RequireAuth> },
